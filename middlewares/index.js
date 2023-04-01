@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { idsDecrypter } = require("../helpers");
 const { Users } = require("../models");
 
 exports.validate =
@@ -86,6 +87,15 @@ exports.verifyToken = async (req, res, next) => {
       },
     });
     req.user = user;
+    if (Object.keys(req.params).length) {
+      req.params = idsDecrypter(req.params);
+    }
+    if (Object.keys(req.query).length) {
+      req.query = idsDecrypter(req.query);
+    }
+    if (Object.keys(req.body).length) {
+      req.body = idsDecrypter(req.body);
+    }
     next();
   } catch (error) {
     next(error);
