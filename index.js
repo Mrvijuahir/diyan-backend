@@ -85,6 +85,3 @@ sequelize
   .catch((reason) =>
     console.log("Unable to connect to the MySQL database:", reason)
   );
-
-// TODO
-// Create common functions to encrypt and decrypt ids from request data and response data

@@ -1,3 +1,4 @@
+const { idsEncrypter } = require("../helpers");
 const { Users } = require("../models");
 
 exports.getUser = async (req, res, next) => {
@@ -11,7 +12,7 @@ exports.getUser = async (req, res, next) => {
     res.status(200).json({
       status: true,
       message: "Your data fetched successful.",
-      data: user,
+      data: idsEncrypter(user),
     });
   } catch (error) {
     next(error);
