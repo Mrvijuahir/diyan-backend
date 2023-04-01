@@ -3,8 +3,6 @@ const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
 const bcrypt = require("bcryptjs");
 
 class Users extends Model {
-  static associate(models) {}
-
   // Set display name
   setDisplayName() {
     this.display_name = `${this.first_name} ${this.last_name}`;
@@ -27,7 +25,6 @@ Users.init(
     },
     display_name: {
       type: DataTypes.STRING(75),
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(75),
@@ -36,7 +33,6 @@ Users.init(
     },
     phone: {
       type: DataTypes.STRING(10),
-      allowNull: false,
     },
     bio: {
       type: DataTypes.TEXT,
@@ -63,8 +59,11 @@ Users.init(
   }
 );
 
-Users.associate((models) => {
-  console.log("models", models);
-});
+Users.associate = (models) => {
+  Users.hasMany(models.EmailSendHistory, {
+    foreignKey: "user_id",
+    sourceKey: "id",
+  });
+};
 
 module.exports = Users;
