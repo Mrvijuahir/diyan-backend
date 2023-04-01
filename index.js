@@ -2,6 +2,9 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 
+// connect redis
+require("./helpers/redis");
+
 // Express App
 const express = require("express");
 const app = express();
@@ -9,6 +12,9 @@ const app = express();
 // Initialize Middlewares
 app.use(express.json()); // parse JSON data in request body
 app.use(express.urlencoded({ extended: true })); // parse URL-encoded data in request body
+
+// template engine configuration
+app.set("view engine", "ejs");
 
 // cors configurations
 const cors = require("cors");
@@ -39,8 +45,14 @@ app.use(logAPICalls);
 
 // Socket io configurations
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: ["http://localhost:3000"], // cors origin configuration
+  },
+});
 global.io = io;
+// Import socket file
+require("./helpers/socket");
 
 // Variables
 const PORT = process.env.PORT;
@@ -62,3 +74,24 @@ server.listen(PORT, () => {
     `Server is start listing on port: ${PORT}. Visit http://localhost:${PORT}`
   );
 });
+// TODO
+// Create common functions to encrypt and decrypt ids from request data and response data
+
+// Create mongodb connection file
+// mysql connection file
+
+// manage one config file to handle dynamic conditions
+
+// Create common function to validate joi schemas for req.body, req.params, req.query
+// create api demo with for version management
+// create auth middleware
+// create role management
+
+// random number function
+
+// signup (send verification email)
+// email verification api
+// login if not verified send verification email
+// forgot password
+// reset password
+// get user api
