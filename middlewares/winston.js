@@ -1,11 +1,34 @@
 const winston = require("winston");
 const path = require("path");
+const DailyRotateFile = require("winston-daily-rotate-file");
+
+// create mysql query logger function to log into mysql.log file
+exports.mysqlLogger = winston.createLogger({
+  transports: [
+    new DailyRotateFile({
+      filename: path.join(__dirname, "../logs/mysql/mysql.log"),
+      dirname: path.join(__dirname, "../logs/mysql"),
+      zippedArchive: true,
+      maxSize: "5m",
+      maxFiles: "30d",
+      level: "info",
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf((info) => `${info.timestamp} ${info.message}`)
+      ),
+    }),
+  ],
+});
 
 // create logger to save error logs into log file
 exports.logger = winston.createLogger({
   transports: [
-    new winston.transports.File({
-      filename: path.join(__dirname, "../logs/error.log"),
+    new DailyRotateFile({
+      filename: path.join(__dirname, "../logs/errors/error.log"),
+      dirname: path.join(__dirname, "../logs/errors"),
+      zippedArchive: true,
+      maxSize: "5m",
+      maxFiles: "30d",
       level: "error",
       format: winston.format.combine(
         winston.format.timestamp(),

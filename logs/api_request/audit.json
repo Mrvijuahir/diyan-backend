@@ -1,0 +1,16 @@
+{
+    "keepSettings": {
+        "type": 1,
+        "amount": 30
+    },
+    "auditFilename": "/var/www/html/work/starter-projects/node-express-starter/logs/api_request/audit.json",
+    "hashType": "md5",
+    "extension": ".log",
+    "files": [
+        {
+            "date": 1680332961992,
+            "name": "/var/www/html/work/starter-projects/node-express-starter/logs/api_request/api-request-20230401.0.log",
+            "hash": "7ba85c88974b99aa30aec625ac301404"
+        }
+    ]
+}

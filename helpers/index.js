@@ -47,3 +47,23 @@ exports.base64Encrypt = (text) => Buffer.from(String(text)).toString("base64");
  */
 exports.base64Decrypt = (text) =>
   Buffer.from(String(text), "base64").toString("ascii");
+
+/**
+ *
+ * @param {Number} min i.e. 1
+ * @param {Number} max i.e. 10
+ * @returns random number between min and max values i.e. 9
+ */
+exports.generateRandomNumberUsingMinMaxValue = (min = 1000, max = 9999) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+/**
+ *
+ * @param {Number} n i.e. 6
+ * @returns random number with n digit which you pass in parameter i.e. 100000 to 999999
+ */
+exports.generateRandomNumberUsingLength = (n = 4) => {
+  const min = Math.pow(10, n - 1);
+  const max = Math.pow(10, n) - 1;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};

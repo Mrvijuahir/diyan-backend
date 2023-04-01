@@ -5,6 +5,9 @@ const path = require("path");
 // connect redis
 require("./helpers/redis");
 
+// connect mysql database
+const { sequelize } = require("./configs/mysql");
+
 // Express App
 const express = require("express");
 const app = express();
@@ -31,11 +34,10 @@ const morgan = require("morgan");
 app.use(morgan("dev"));
 // Add api request logs into log file.
 // here we are used combined format to add as much as possible details of user request into log file
+const { morganRotatingLogStream } = require("./middlewares/morgan");
 app.use(
   morgan("combined", {
-    stream: fs.createWriteStream(path.join(__dirname, "logs/api_request.log"), {
-      flags: "a",
-    }),
+    stream: morganRotatingLogStream,
   })
 );
 
@@ -74,11 +76,19 @@ server.listen(PORT, () => {
     `Server is start listing on port: ${PORT}. Visit http://localhost:${PORT}`
   );
 });
+
+// Connect MySQL database
+sequelize
+  .sync()
+  .then(() =>
+    console.log("MySQL database connection has been established successfully.")
+  )
+  .catch((reason) =>
+    console.log("Unable to connect to the MySQL database:", reason)
+  );
+
 // TODO
 // Create common functions to encrypt and decrypt ids from request data and response data
-
-// Create mongodb connection file
-// mysql connection file
 
 // manage one config file to handle dynamic conditions
 
@@ -86,8 +96,6 @@ server.listen(PORT, () => {
 // create api demo with for version management
 // create auth middleware
 // create role management
-
-// random number function
 
 // signup (send verification email)
 // email verification api
