@@ -1,6 +1,5 @@
+// Load env variables
 require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
 
 // connect redis
 require("./helpers/redis");
@@ -89,17 +88,3 @@ sequelize
 
 // TODO
 // Create common functions to encrypt and decrypt ids from request data and response data
-
-// manage one config file to handle dynamic conditions
-
-// Create common function to validate joi schemas for req.body, req.params, req.query
-// create api demo with for version management
-// create auth middleware
-// create role management
-
-// signup (send verification email)
-// email verification api
-// login if not verified send verification email
-// forgot password
-// reset password
-// get user api

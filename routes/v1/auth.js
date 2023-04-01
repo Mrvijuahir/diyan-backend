@@ -4,7 +4,7 @@ const {
   verifyAccount,
   forgotPassword,
   resetPassword,
-} = require("../../controllers/user.controller");
+} = require("../../controllers/auth.controller");
 const { validate, decodeToken } = require("../../middlewares");
 const {
   signupJoiSchema,

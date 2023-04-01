@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { Users } = require("../models");
 
 exports.validate =
   (bodySchema, paramsSchema = null, queryParamsSchema = null) =>
@@ -66,6 +67,25 @@ exports.decodeToken = async (req, res, next) => {
 
     const tokenPayload = jwt.decode(token);
     req.tokenPayload = tokenPayload;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.verifyToken = async (req, res, next) => {
+  try {
+    let token = req.headers["authorization"];
+    token = token?.split(" ")[1];
+    if (!token) throw new Error("Token not found.");
+    const tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
+    if (!tokenPayload?.id) throw new Error("Invalid token!");
+    const user = await Users.findByPk(tokenPayload?.id, {
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+    req.user = user;
     next();
   } catch (error) {
     next(error);
