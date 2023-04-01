@@ -1,3 +1,6 @@
 node_modules/
 package-lock.json
 yarn.lock
+logs/api_request/*
+logs/errors/*
+logs/mysql/*

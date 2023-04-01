@@ -1,5 +1,6 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Model } = require("sequelize");
 const { mysqlLogger } = require("../middlewares/winston");
+const _ = require("lodash");
 
 const sequelize = new Sequelize(
   process.env.MYSQL_DB_NAME,
@@ -20,4 +21,24 @@ const sequelize = new Sequelize(
   }
 );
 
-module.exports.sequelize = sequelize;
+const getTableConfigs = (sequelize, tableName = "", excludeFields = []) => {
+  return _.omit(
+    {
+      timestamps: true,
+      sequelize,
+      tableName: tableName,
+      paranoid: true,
+      underscored: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+      deletedAt: "deleted_at",
+    },
+    excludeFields
+  );
+};
+
+module.exports = {
+  sequelize,
+  Model,
+  getTableConfigs,
+};
