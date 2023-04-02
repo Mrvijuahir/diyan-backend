@@ -4,4 +4,11 @@ class CustomError extends Error {
     this.statusCode = statusCode;
   }
 }
-global.CustomError = CustomError;
+global.customError = (error, statusCode = 422) => {
+  if (typeof error === "string") {
+    throw new CustomError(error, statusCode);
+  } else if (error instanceof Error) {
+    throw new CustomError(error?.message, statusCode);
+  }
+  throw new CustomError(error, statusCode);
+};

@@ -9,7 +9,7 @@ exports.signup = async (req, res, next) => {
   try {
     const user = await Users.create(req.body, { hooks: true });
     if (!user)
-      throw new CustomError(
+      customError(
         "Your account not created. Please check your information.",
         422
       );
@@ -31,9 +31,9 @@ exports.verifyAccount = async (req, res, next) => {
         email: req.tokenPayload?.email,
       },
     });
-    if (!user) throw new CustomError("User not found!", 400);
+    if (!user) customError("User not found!", 400);
     if (user?.get()?.is_verified)
-      throw new CustomError("Your account already verified.", 422);
+      customError("Your account already verified.", 422);
     await user.update({ is_verified: true });
     res.status(200).json({
       status: true,
@@ -52,12 +52,12 @@ exports.login = async (req, res, next) => {
         email,
       },
     });
-    if (!user) throw new CustomError("Invalid email or password.", 400);
+    if (!user) customError("Invalid email or password.", 400);
     if (!user.isValidPassword(password))
-      throw new CustomError("Invalid email or password.", 400);
+      customError("Invalid email or password.", 400);
     if (!user.is_verified) {
       await sendAccountVerificationEmail(user);
-      throw new CustomError(
+      customError(
         "Account not verified. Please check your email and verify account.",
         422
       );
@@ -78,7 +78,7 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await Users.findOne({
       where: { email },
     });
-    if (!user) throw new CustomError("Invalid email!", 400);
+    if (!user) customError("Invalid email!", 400);
     await sendResetPasswordEmail(user);
     res.status(200).json({
       status: true,
@@ -97,7 +97,7 @@ exports.resetPassword = async (req, res, next) => {
         email: req.tokenPayload?.email,
       },
     });
-    if (!user) throw new CustomError("User not found!", 400);
+    if (!user) customError("User not found!", 400);
     await user.update({ password });
     res.status(200).json({
       status: true,

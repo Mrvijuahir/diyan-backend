@@ -88,11 +88,11 @@ exports.decodeToken = async (req, res, next) => {
 exports.verifyToken = async (req, res, next) => {
   try {
     let token = req.headers["authorization"];
-    if (!token) throw new CustomError("Token not found.", 404);
+    if (!token) customError("Token not found.", 404);
     token = token?.split(" ")[1];
-    if (!token) throw new CustomError("Invalid token!.", 400);
+    if (!token) customError("Invalid token!.", 400);
     let tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
-    if (!tokenPayload?.id) throw new CustomError("Invalid token!", 401);
+    if (!tokenPayload?.id) customError("Invalid token!", 401);
     tokenPayload = idsDecrypter(tokenPayload);
     const user = await Users.findByPk(tokenPayload?.id, {
       attributes: {
