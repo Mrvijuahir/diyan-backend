@@ -8,7 +8,7 @@ exports.getUser = async (req, res, next) => {
         exclude: ["password", "deleted_at"],
       },
     });
-    if (!user) throw new Error("Your data not found.");
+    if (!user) throw new CustomError("Your data not found.", 404);
     res.status(200).json({
       status: true,
       message: "Your data fetched successful.",

@@ -1,15 +1,12 @@
 const { transporter } = require("../configs/gmail.smtp");
 const ejs = require("ejs");
 const path = require("path");
-const jwt = require("jsonwebtoken");
-
 const { EMAIL_TYPES } = require("../constants");
+const { generateJwtToken } = require("../helpers");
 
 exports.sendAccountVerificationEmail = async (user) => {
   try {
-    const token = jwt.sign({ email: user?.email }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = generateJwtToken({ email: user?.get()?.email });
     const html = await ejs.renderFile(
       path.join(__dirname, "../templates/account-verification.ejs"),
       {
@@ -42,9 +39,7 @@ exports.sendAccountVerificationEmail = async (user) => {
 
 exports.sendResetPasswordEmail = async (user) => {
   try {
-    const token = jwt.sign({ email: user?.email }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = generateJwtToken({ email: user?.get()?.email });
     const html = await ejs.renderFile(
       path.join(__dirname, "../templates/reset-password.ejs"),
       {

@@ -1,16 +1,17 @@
+const { generateJwtToken } = require("../helpers");
 const { Users } = require("../models");
 const {
   sendAccountVerificationEmail,
   sendResetPasswordEmail,
 } = require("../services/emails");
-const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res, next) => {
   try {
     const user = await Users.create(req.body, { hooks: true });
     if (!user)
-      throw new Error(
-        "Your account not created. Please check your information."
+      throw new CustomError(
+        "Your account not created. Please check your information.",
+        422
       );
     await sendAccountVerificationEmail(user);
     res.status(201).json({
@@ -30,9 +31,9 @@ exports.verifyAccount = async (req, res, next) => {
         email: req.tokenPayload?.email,
       },
     });
-    if (!user) throw new Error("User not found!");
+    if (!user) throw new CustomError("User not found!", 400);
     if (user?.get()?.is_verified)
-      throw new Error("Your account already verified.");
+      throw new CustomError("Your account already verified.", 422);
     await user.update({ is_verified: true });
     res.status(200).json({
       status: true,
@@ -51,22 +52,20 @@ exports.login = async (req, res, next) => {
         email,
       },
     });
-    if (!user) throw new Error("Invalid email or password.");
+    if (!user) throw new CustomError("Invalid email or password.", 400);
     if (!user.isValidPassword(password))
-      throw new Error("Invalid email or password.");
+      throw new CustomError("Invalid email or password.", 400);
     if (!user.is_verified) {
       await sendAccountVerificationEmail(user);
-      throw new Error(
-        "Account not verified. Please check your email and verify account."
+      throw new CustomError(
+        "Account not verified. Please check your email and verify account.",
+        422
       );
     }
-    const token = jwt.sign({ id: user?.get()?.id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
     res.status(200).json({
       status: true,
       message: "Login successful.",
-      token,
+      token: generateJwtToken({ id: user?.get()?.id }),
     });
   } catch (error) {
     next(error);
@@ -79,7 +78,7 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await Users.findOne({
       where: { email },
     });
-    if (!user) throw new Error("Invalid email!");
+    if (!user) throw new CustomError("Invalid email!", 400);
     await sendResetPasswordEmail(user);
     res.status(200).json({
       status: true,
@@ -98,7 +97,7 @@ exports.resetPassword = async (req, res, next) => {
         email: req.tokenPayload?.email,
       },
     });
-    if (!user) throw new Error("User not found!");
+    if (!user) throw new CustomError("User not found!", 400);
     await user.update({ password });
     res.status(200).json({
       status: true,

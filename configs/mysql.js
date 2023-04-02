@@ -1,5 +1,4 @@
 const { Sequelize, Model } = require("sequelize");
-const { mysqlLogger } = require("../middlewares/winston");
 const _ = require("lodash");
 
 const sequelize = new Sequelize(
@@ -17,7 +16,6 @@ const sequelize = new Sequelize(
       acquire: 60000, // The maximum time, in milliseconds, that pool will try to get connection before throwing error
       evict: 1000, // The time interval, in milliseconds, after which sequelize-pool will remove idle connections.
     },
-    logging: (msg) => mysqlLogger.info(msg),
   }
 );
 

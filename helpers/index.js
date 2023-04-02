@@ -2,6 +2,7 @@ const { CRYPTO_ALGORITHM } = require("../constants");
 const crypto = require("crypto");
 const { Model } = require("../configs/mysql");
 const uuidv4 = require("uuid").v4;
+const jwt = require("jsonwebtoken");
 
 /**
  *
@@ -35,6 +36,17 @@ exports.getUniqueFileName = (files = null, folderPath = "") => {
       }${uuidv4()}.${files.originalname.split(".").pop()}`;
   else return uuidv4();
 };
+
+/**
+ *
+ * @param {Object} payload
+ * @param {String} expiresIn
+ * @returns json web token with encrypted payload and default 1 day expire time
+ */
+exports.generateJwtToken = (payload = {}, expiresIn = "1d") =>
+  jwt.sign(this.idsEncrypter(payload), process.env.JWT_SECRET, {
+    expiresIn,
+  });
 
 /**
  * This function is encrypt data using crypto
