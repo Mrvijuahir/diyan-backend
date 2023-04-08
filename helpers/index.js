@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-const { sequelize } = require("../configs/mysql");
+const _ = require("lodash");
 
 /**
  *

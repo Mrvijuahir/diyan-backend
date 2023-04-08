@@ -1,5 +1,3 @@
-const { sequelize } = require("../configs/mysql");
-
 module.exports = {
   USER_ROLES: {
     USER: "user",
@@ -8,7 +6,7 @@ module.exports = {
   getRolesAttributeList: (type = "") => {
     switch (type) {
       case "dropdown":
-        return ["id", "name"];
+        return ["id", "role_name"];
       default:
         return ["id", "role_name", "status", "created_at"];
     }
