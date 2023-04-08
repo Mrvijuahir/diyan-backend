@@ -1,3 +1,7 @@
+const { Admin, Employees } = require("../models");
+const jwt = require("jsonwebtoken");
+const { USER_ROLES } = require("../constants");
+
 exports.validate =
   (bodySchema, paramsSchema = null, queryParamsSchema = null) =>
   (req, res, next) => {
@@ -57,3 +61,49 @@ exports.validate =
       next(error);
     }
   };
+
+exports.verifyToken = async (req, res, next) => {
+  try {
+    let token = req.headers["authorization"];
+    token = token?.split(" ")[1];
+    console.log("token", token);
+    if (!token)
+      return res.status(404).json({
+        status: false,
+        message: "Token not found!",
+      });
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    if (!payload?.id || !payload?.role)
+      return res.status(401).json({
+        status: false,
+        message: " Invalid token.",
+      });
+    let user = null;
+    if (payload?.role === USER_ROLES.ADMIN) {
+      user = await Admin.findByPk(payload?.id);
+    } else if (payload?.role === USER_ROLES.USER) {
+      user = await Employees.findByPk(payload?.id);
+    }
+    if (!user)
+      return res.status(404).json({
+        status: false,
+        message: "Your data not found.",
+      });
+    req.role = payload?.role;
+    req.jwtPayload = payload;
+    req.user = user;
+    next();
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError)
+      return res.status(401).json({
+        status: false,
+        message: "Your login session has been expired. Please login again.",
+      });
+    if (error instanceof jwt.JsonWebTokenError)
+      return res.status(401).json({
+        status: false,
+        message: "Invalid token.",
+      });
+    next(error);
+  }
+};
