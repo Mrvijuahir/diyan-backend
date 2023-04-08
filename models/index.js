@@ -2,12 +2,9 @@ const { sequelize } = require("../configs/mysql");
 const { Sequelize } = require("sequelize");
 const db = {};
 
-db.Users = require("./users");
-db.Employees = require("./employees");
-db.Materials = require("./materials");
-db.Departments = require("./departments");
-db.DepartmentMaterials = require("./department_materials");
+db.Admin = require("./admin");
 db.Roles = require("./roles");
+db.Employees = require("./employees");
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

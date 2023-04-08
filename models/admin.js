@@ -1,16 +1,15 @@
 const { DataTypes } = require("sequelize");
 const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
 const bcrypt = require("bcryptjs");
-const { USER_ROLES } = require("../constants");
 
-class Users extends Model {
+class Admin extends Model {
   // verify password
   isValidPassword(password) {
     return bcrypt.compareSync(password, this.password);
   }
 }
 
-Users.init(
+Admin.init(
   {
     email: {
       type: DataTypes.STRING(75),
@@ -24,12 +23,8 @@ Users.init(
         this.setDataValue("password", bcrypt.hashSync(value, 10));
       },
     },
-    role: {
-      type: DataTypes.ENUM(...Object.values(USER_ROLES)),
-      defaultValue: "admin",
-    },
   },
-  getTableConfigs(sequelize, "users")
+  getTableConfigs(sequelize, "admins")
 );
 
-module.exports = Users;
+module.exports = Admin;

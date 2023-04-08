@@ -1,16 +1,17 @@
 const { DataTypes } = require("sequelize");
 const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
+const bcrypt = require("bcryptjs");
 
 class Employees extends Model {
   static associate(models) {
-    Employees.belongsTo(models.Departments, {
-      foreignKey: "department_id",
-      targetKey: "id",
-    });
     Employees.belongsTo(models.Roles, {
       foreignKey: "role_id",
       targetKey: "id",
     });
+  }
+  // verify password
+  isValidPassword(password) {
+    return bcrypt.compareSync(password, this.password);
   }
 }
 
@@ -25,6 +26,13 @@ Employees.init(
       allowNull: false,
       unique: true,
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      set(value) {
+        this.setDataValue("password", bcrypt.hashSync(value, 10));
+      },
+    },
     personal_number: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -35,28 +43,28 @@ Employees.init(
     },
     reporting_to: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "employees",
-        key: "id",
-      },
-    },
-    role_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: "roles",
         key: "id",
       },
     },
-    department_id: {
+    role_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: "departments",
+        model: "roles",
         key: "id",
       },
     },
+    // department_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   references: {
+    //     model: "departments",
+    //     key: "id",
+    //   },
+    // },
     dob: {
       type: DataTypes.DATEONLY,
       allowNull: false,
