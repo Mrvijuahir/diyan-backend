@@ -1,11 +1,11 @@
 const { generateJwtToken } = require("../helpers");
-const { Users, Employees } = require("../models");
+const { Admin, Employees } = require("../models");
 const { USER_ROLES } = require("../constants");
 
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req?.body;
-    let user = await Users.findOne({
+    let user = await Admin.findOne({
       where: {
         email,
       },

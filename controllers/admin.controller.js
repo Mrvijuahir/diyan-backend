@@ -1,14 +1,14 @@
-const { Users } = require("../models");
+const { Admin } = require("../models");
 
 exports.create = async (req, res, next) => {
   try {
-    const isAlreadyExist = await Users.count({ email: req.body?.email });
+    const isAlreadyExist = await Admin.count({ email: req.body?.email });
     if (isAlreadyExist)
       return res.status(422).json({
         status: false,
         message: "Email already in use!",
       });
-    let user = await Users.create(req.body);
+    let user = await Admin.create(req.body);
     if (!user)
       return res.status(422).json({
         status: false,
