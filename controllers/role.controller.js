@@ -81,7 +81,7 @@ exports.getRolesForHierarchy = async (req, res, next) => {
         query: req.query,
       }),
       where: {
-        "$RoleHierarchy.id$": {
+        "$role_hierarchy.id$": {
           [Op.eq]: null,
         },
       },
