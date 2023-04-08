@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { signup } = require("../../controllers");
+const { signup, login } = require("../../controllers/user.controller");
 const {
   signupJoiSchema,
   loginJoiSchema,
