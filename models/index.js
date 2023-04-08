@@ -7,6 +7,7 @@ db.Employees = require("./employees");
 db.Materials = require("./materials");
 db.Departments = require("./departments");
 db.DepartmentMaterials = require("./department_materials");
+db.Roles = require("./roles");
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
