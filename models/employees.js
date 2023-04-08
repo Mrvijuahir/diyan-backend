@@ -7,6 +7,10 @@ class Employees extends Model {
       foreignKey: "department_id",
       targetKey: "id",
     });
+    Employees.belongsTo(models.Roles, {
+      foreignKey: "role_id",
+      targetKey: "id",
+    });
   }
 }
 
