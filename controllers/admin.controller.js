@@ -2,7 +2,11 @@ const { Admin } = require("../models");
 
 exports.create = async (req, res, next) => {
   try {
-    const isAlreadyExist = await Admin.count({ email: req.body?.email });
+    const isAlreadyExist = await Admin.count({
+      where: {
+        email: req.body?.email,
+      },
+    });
     if (isAlreadyExist)
       return res.status(422).json({
         status: false,
