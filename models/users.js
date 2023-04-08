@@ -26,7 +26,7 @@ Users.init(
     },
     role: {
       type: DataTypes.ENUM(...Object.values(USER_ROLES)),
-      defaultValue: "user",
+      defaultValue: "admin",
     },
   },
   getTableConfigs(sequelize, "users")
