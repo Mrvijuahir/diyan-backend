@@ -9,10 +9,12 @@ db.Employees = require("./employees");
 db.Materials = require("./materials");
 db.Departments = require("./departments");
 db.MaterialsDepartments = require("./materialDepartment");
+db.MaterialStockTransactions = require("./material_stock_transactions");
+
 Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
-	}
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;

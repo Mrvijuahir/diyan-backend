@@ -10,5 +10,6 @@ router.use("/material", require("./material.routes"));
 router.use("/department", require("./department.routes"));
 router.use("/role-hierarchy", require("./role_hierarchy.routes"));
 router.use("/employees", require("./employee.routes"));
+router.use("/stock", require("./material_stock_transaction.routes"));
 
 module.exports = router;
