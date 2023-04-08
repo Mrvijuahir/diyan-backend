@@ -1,20 +1,16 @@
 const router = require("express").Router();
 const {
-	addRole,
-	getRole,
-	updateRole,
-	getRoleById,
-	deleteRole,
+  addRole,
+  getRoles,
+  updateRole,
 } = require("../../controllers/role.controller");
 const {
-	addRoleJoiSchema,
-	updateRoleJoiSchema,
+  addRoleJoiSchema,
+  updateRoleJoiSchema,
 } = require("../../validations/role");
 const { validate } = require("../../middlewares");
 
-router.post("/addrole", validate(addRoleJoiSchema), addRole);
-router.get("/getrole", getRole);
-router.get("/getrole/:id", getRoleById);
-router.put("/updaterole/:id", validate(updateRoleJoiSchema), updateRole);
-router.delete("/deleterole/:id", deleteRole);
+router.route("/").post(validate(addRoleJoiSchema), addRole).get(getRoles);
+router.patch("/:id", validate(updateRoleJoiSchema), updateRole);
+
 module.exports = router;

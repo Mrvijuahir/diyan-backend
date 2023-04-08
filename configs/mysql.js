@@ -1,4 +1,4 @@
-const { Sequelize, Model, DataTypes } = require("sequelize");
+const { Sequelize, Model } = require("sequelize");
 const _ = require("lodash");
 
 const sequelize = new Sequelize(
