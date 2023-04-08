@@ -4,6 +4,7 @@ const db = {};
 
 db.Admin = require("./admin");
 db.Roles = require("./roles");
+db.RoleHierarchy = require("./role_hierarchy");
 db.Employees = require("./employees");
 
 Object.keys(db).forEach((modelName) => {

@@ -1,5 +1,7 @@
+const { getRolesAttributeList } = require("../constants");
 const { queryGenerator } = require("../helpers");
 const { Roles } = require("../models");
+const _ = require("lodash");
 
 exports.addRole = async (req, res, next) => {
   try {
@@ -19,7 +21,7 @@ exports.addRole = async (req, res, next) => {
     res.status(200).json({
       status: true,
       message: "Role created successfully.",
-      data: role,
+      data: _.pick(role, getRolesAttributeList()),
     });
   } catch (error) {
     next(error);
@@ -43,7 +45,7 @@ exports.updateRole = async (req, res, next) => {
     res.status(200).json({
       status: true,
       message: "Update successful.",
-      data: role.get(),
+      data: _.pick(role.get(), getRolesAttributeList()),
     });
   } catch (error) {
     next(error);
@@ -55,8 +57,14 @@ exports.getRoles = async (req, res, next) => {
     const data = await Roles.findAndCountAll({
       ...queryGenerator({
         query: req.query,
-        searchColumns: ["role_name", "status"],
+        searchColumns: ["role_name", "created_at"],
+        ...(req.query?.status && {
+          where: {
+            status: req.query?.status === "true",
+          },
+        }),
       }),
+      attributes: getRolesAttributeList(req.query?.type),
     });
 
     res.status(200).json({

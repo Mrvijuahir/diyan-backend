@@ -7,6 +7,16 @@ class Roles extends Model {
       foreignKey: "role_id",
       targetKey: "id",
     });
+    Roles.hasOne(models.RoleHierarchy, {
+      as: "role_hierarchy",
+      foreignKey: "role_id",
+      sourceKey: "id",
+    });
+    Roles.hasOne(models.RoleHierarchy, {
+      as: "reporting_hierarchy",
+      foreignKey: "reporting_to",
+      sourceKey: "id",
+    });
   }
 }
 

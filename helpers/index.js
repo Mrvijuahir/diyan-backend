@@ -114,14 +114,20 @@ exports.queryGenerator = ({
   if (Object.keys(where).length) {
     obj = {
       ...obj,
-      where,
+      where: Object.fromEntries(
+        Object.entries(where)?.map(([key, value]) => {
+          if (key === "id" || key?.includes("_id"))
+            return [key, parseInt(value)];
+          return [key, value];
+        })
+      ),
     };
   }
   let { limit, offset } = query;
   if (limit || offset) {
     obj = {
       ...obj,
-      limit: +limit || 10,
+      limit: parseInt(limit) || 10,
       offset: +offset || 0,
     };
   }
