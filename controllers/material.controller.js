@@ -1,7 +1,7 @@
 const { getMaterialsAttributeList } = require("../constants");
 const { queryGenerator } = require("../helpers");
 const { Materials } = require("../models");
-
+const _ = require("lodash");
 exports.addMaterial = async (req, res, next) => {
 	try {
 		const { material_name } = req.body;

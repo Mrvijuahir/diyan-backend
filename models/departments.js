@@ -1,20 +1,20 @@
 const { DataTypes } = require("sequelize");
 const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
 
-class Materials extends Model {
+class Departments extends Model {
 	static associate(models) {
-		Materials.belongsToMany(models.Departments, {
+		Departments.belongsToMany(models.Materials, {
 			through: models.MaterialsDepartments,
-			foreignKey: "material_id",
+			foreignKey: "department_id",
 			sourceKey: "id",
 			targetKey: "id",
 		});
 	}
 }
 
-Materials.init(
+Departments.init(
 	{
-		material_name: {
+		department_name: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,
@@ -24,7 +24,7 @@ Materials.init(
 			defaultValue: true,
 		},
 	},
-	getTableConfigs(sequelize, "materials")
+	getTableConfigs(sequelize, "departments")
 );
 
-module.exports = Materials;
+module.exports = Departments;
