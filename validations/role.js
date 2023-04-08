@@ -5,4 +5,8 @@ module.exports = {
 		role_name: Joi.string().required().label("Role Name"),
 		status: Joi.boolean().optional().label("Status"),
 	}),
+	updateRoleJoiSchema: Joi.object().keys({
+		role_name: Joi.string().required().label("Role Name"),
+		status: Joi.boolean().optional().label("Status"),
+	}),
 };
