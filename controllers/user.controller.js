@@ -13,7 +13,6 @@ exports.signup = async (req, res, next) => {
     res.status(200).json({
       status: true,
       message: "Signup successful.",
-      token: generateJwtToken({ id: user?.id, role: user?.role }),
     });
   } catch (error) {
     next(error);
