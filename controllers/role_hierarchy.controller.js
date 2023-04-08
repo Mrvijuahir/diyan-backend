@@ -5,9 +5,16 @@ const {
 const { queryGenerator } = require("../helpers");
 const { RoleHierarchy, Roles } = require("../models");
 const _ = require("lodash");
+const { Op } = require("sequelize");
 
 exports.create = async (req, res, next) => {
   try {
+    const { role_id, reporting_to } = req.body;
+    if (role_id === reporting_to)
+      return res.status(400).json({
+        status: false,
+        message: "Same role and reporting role is not allowed.",
+      });
     const isExist = await RoleHierarchy.count({
       where: _.omit(req.body, ["status"]),
     });
@@ -45,6 +52,24 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   try {
     const id = req.params.id;
+    const { reporting_to } = req.body;
+    let data = await RoleHierarchy.findByPk(id);
+    if (reporting_to) {
+      const isExist = await RoleHierarchy.count({
+        where: {
+          role_id: data?.get()?.id,
+          reporting_to,
+          id: {
+            [Op.ne]: id,
+          },
+        },
+      });
+      if (isExist)
+        return res.status(422).json({
+          status: false,
+          message: "Role hierarchy already created.",
+        });
+    }
     const isUpdate = await RoleHierarchy.update(req.body, {
       where: {
         id,
@@ -55,7 +80,7 @@ exports.update = async (req, res, next) => {
         status: false,
         message: "Something went wrong! Role hierarchy not updated.",
       });
-    const data = await RoleHierarchy.findByPk(id, {
+    data = await RoleHierarchy.findByPk(id, {
       attributes: getRoleHierarchyAttributeList(),
       include: [
         {
