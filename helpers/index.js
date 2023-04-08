@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
  * @returns json web token with encrypted payload and default 1 day expire time
  */
 exports.generateJwtToken = (payload = {}, expiresIn = "1d") =>
-  jwt.sign(this.idsEncrypter(payload), process.env.JWT_SECRET, {
+  jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn,
   });
 
