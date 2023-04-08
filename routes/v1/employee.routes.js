@@ -2,30 +2,23 @@ const router = require("express").Router();
 const {
   create,
   update,
-  destroy,
-  getEmployee,
   getEmployees,
   getRoleWiseEmployees,
 } = require("../../controllers/employee.controller");
 const {
   createJoiSchema,
   updateJoiSchema,
-  deleteJoiSchema,
-  getEmployeeJoiSchema,
   getEmployeesJoiSchema,
 } = require("../../validations/employee");
+const { validate } = require("../../middlewares");
 
 router.get("/role-wise", getRoleWiseEmployees);
 
 router
   .route("/")
-  .get(validator(getEmployeesJoiSchema), getEmployees)
-  .post(validator(createJoiSchema), create);
+  .get(validate(getEmployeesJoiSchema), getEmployees)
+  .post(validate(createJoiSchema), create);
 
-router
-  .route("/:id")
-  .get(validator(getEmployeeJoiSchema), getEmployee)
-  .patch(validator(updateJoiSchema), update)
-  .delete(validator(deleteJoiSchema), destroy);
+router.route("/:id").patch(validate(updateJoiSchema), update);
 
 module.exports = router;
