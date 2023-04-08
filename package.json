@@ -1,7 +1,7 @@
 {
-  "name": "node-express-starter",
+  "name": "diyan-backend",
   "version": "1.0.0",
-  "description": "This project help in your node initial project setup. it's include some commonly used packages, functions, some initial configs for database connections, etc...",
+  "description": "Inventory management website",
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
@@ -10,19 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/workjay/node-express-starter.git"
+    "url": "git+https://github.com/Mrvijuahir/diyan-backend.git"
   },
   "author": "Jay Depani",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/workjay/node-express-starter/issues"
+    "url": "https://github.com/Mrvijuahir/diyan-backend/issues"
   },
-  "homepage": "https://github.com/workjay/node-express-starter#readme",
+  "homepage": "https://github.com/Mrvijuahir/diyan-backend#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "joi": "^17.8.4",
     "jsonwebtoken": "^9.0.0",
@@ -31,9 +30,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.2.0",
     "nodemailer": "^6.9.1",
-    "redis": "^4.6.5",
     "sequelize": "^6.30.0",
-    "socket.io": "^4.6.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
