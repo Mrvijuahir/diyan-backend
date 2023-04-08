@@ -98,6 +98,7 @@ exports.getSearchQuery = (query = {}, columns = [], where = {}) => {
  *    query: Request Query Object,
  *    orderByTablesInfo: order by tables info if you want to order by in child table,
  *    searchColumns: List of columns in which you want to search,
+ *    filterColumns: List of columns in which you want to filter
  *    where: Extra condition
  * }
  * @returns query
@@ -107,10 +108,25 @@ exports.queryGenerator = ({
   orderByTablesInfo,
   searchColumns = [],
   where = {},
+  filterColumns = [],
 }) => {
   let obj = {
     ...this.getOrderBy(query, orderByTablesInfo),
   };
+  if (filterColumns?.length) {
+    where = {
+      ...where,
+      ..._.pick(
+        Object.fromEntries(
+          Object.entries(query)?.map(([key, value]) => {
+            if (["true", "false"].includes(key)) return [key, value === "true"];
+            return [key, value];
+          })
+        ),
+        filterColumns
+      ),
+    };
+  }
   if (Object.keys(where).length) {
     obj = {
       ...obj,

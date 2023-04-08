@@ -5,8 +5,27 @@ const bcrypt = require("bcryptjs");
 class Employees extends Model {
   static associate(models) {
     Employees.belongsTo(models.Roles, {
-      foreignKey: "role_id",
+      foreignKey: {
+        name: "role_id",
+        allowNull: true,
+      },
       targetKey: "id",
+    });
+    Employees.belongsTo(models.Employees, {
+      as: "reporting_employee",
+      foreignKey: {
+        name: "reporting_to",
+        allowNull: true,
+      },
+      targetKey: "id",
+    });
+    Employees.hasMany(models.Employees, {
+      as: "reporter_employees",
+      foreignKey: {
+        name: "reporting_to",
+        allowNull: true,
+      },
+      sourceKey: "id",
     });
   }
   // verify password
@@ -28,7 +47,6 @@ Employees.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
       set(value) {
         this.setDataValue("password", bcrypt.hashSync(value, 10));
       },
@@ -45,7 +63,7 @@ Employees.init(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "roles",
+        model: "employees",
         key: "id",
       },
     },

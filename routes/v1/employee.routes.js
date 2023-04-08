@@ -5,6 +5,7 @@ const {
   destroy,
   getEmployee,
   getEmployees,
+  getRoleWiseEmployees,
 } = require("../../controllers/employee.controller");
 const {
   createJoiSchema,
@@ -13,6 +14,8 @@ const {
   getEmployeeJoiSchema,
   getEmployeesJoiSchema,
 } = require("../../validations/employee");
+
+router.get("/role-wise", getRoleWiseEmployees);
 
 router
   .route("/")

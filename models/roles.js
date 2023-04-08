@@ -4,7 +4,10 @@ const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
 class Roles extends Model {
   static associate(models) {
     Roles.hasMany(models.Employees, {
-      foreignKey: "role_id",
+      foreignKey: {
+        name: "role_id",
+        allowNull: true,
+      },
       targetKey: "id",
     });
     Roles.hasOne(models.RoleHierarchy, {
@@ -12,7 +15,7 @@ class Roles extends Model {
       foreignKey: "role_id",
       sourceKey: "id",
     });
-    Roles.hasOne(models.RoleHierarchy, {
+    Roles.hasMany(models.RoleHierarchy, {
       as: "reporting_hierarchy",
       foreignKey: "reporting_to",
       sourceKey: "id",

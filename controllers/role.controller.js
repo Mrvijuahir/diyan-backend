@@ -1,7 +1,8 @@
 const { getRolesAttributeList } = require("../constants");
 const { queryGenerator } = require("../helpers");
-const { Roles } = require("../models");
+const { Roles, RoleHierarchy } = require("../models");
 const _ = require("lodash");
+const { Op } = require("sequelize");
 
 exports.addRole = async (req, res, next) => {
   try {
@@ -57,16 +58,41 @@ exports.getRoles = async (req, res, next) => {
     const data = await Roles.findAndCountAll({
       ...queryGenerator({
         query: req.query,
-        searchColumns: ["role_name", "created_at"],
-        ...(req.query?.status && {
-          where: {
-            status: req.query?.status === "true",
-          },
-        }),
+        searchColumns: ["role_name"],
+        filterColumns: ["id"],
       }),
       attributes: getRolesAttributeList(req.query?.type),
     });
 
+    res.status(200).json({
+      status: true,
+      message: "Successfully retrieved all roles.",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getRolesForHierarchy = async (req, res, next) => {
+  try {
+    const data = await Roles.findAndCountAll({
+      ...queryGenerator({
+        query: req.query,
+      }),
+      where: {
+        "$RoleHierarchy.id$": {
+          [Op.eq]: null,
+        },
+      },
+      attributes: getRolesAttributeList("dropdown"),
+      include: [
+        {
+          model: RoleHierarchy,
+          as: "role_hierarchy",
+        },
+      ],
+    });
     res.status(200).json({
       status: true,
       message: "Successfully retrieved all roles.",

@@ -19,6 +19,18 @@ exports.create = async (req, res, next) => {
     let roleHierarchy = await RoleHierarchy.create(req.body);
     await roleHierarchy.reload({
       attributes: getRoleHierarchyAttributeList(),
+      include: [
+        {
+          model: Roles,
+          as: "role",
+          attributes: getRolesAttributeList("dropdown"),
+        },
+        {
+          model: Roles,
+          as: "reporting_role",
+          attributes: getRolesAttributeList("dropdown"),
+        },
+      ],
     });
     res.status(200).json({
       status: true,
@@ -45,6 +57,18 @@ exports.update = async (req, res, next) => {
       });
     const data = await RoleHierarchy.findByPk(id, {
       attributes: getRoleHierarchyAttributeList(),
+      include: [
+        {
+          model: Roles,
+          as: "role",
+          attributes: getRolesAttributeList("dropdown"),
+        },
+        {
+          model: Roles,
+          as: "reporting_role",
+          attributes: getRolesAttributeList("dropdown"),
+        },
+      ],
     });
     res.status(200).json({
       status: true,
@@ -61,12 +85,8 @@ exports.getRoleHierarchy = async (req, res, next) => {
     const data = await RoleHierarchy.findAndCountAll({
       ...queryGenerator({
         query: req.query,
-        searchColumns: ["", "created_at"],
-        ...(req.query?.status && {
-          where: {
-            status: req.query?.status === "true",
-          },
-        }),
+        searchColumns: ["$role.role_name$", "$reporting_role.role_name$"],
+        filterColumns: ["id"],
       }),
       attributes: getRoleHierarchyAttributeList(),
       include: [
