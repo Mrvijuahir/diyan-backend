@@ -6,6 +6,7 @@ const {
 const _ = require("lodash");
 const department = require("../validations/department");
 const { Op } = require("sequelize");
+const { queryGenerator } = require("../helpers");
 
 exports.addDepartments = async (req, res, next) => {
 	try {
@@ -109,4 +110,31 @@ exports.updateDepartment = async (req, res, next) => {
 	}
 };
 
-exports.getDepartments = (req, res, next) => {};
+exports.getDepartments = async (req, res, next) => {
+	try {
+		const department = await Departments.findAndCountAll({
+			...queryGenerator({
+				query: req.query,
+				searchColumns: ["department_name"],
+				filterColumns: ["id"],
+			}),
+			attributes: getDepartmentsAttributeList(),
+			include: [
+				{
+					model: Materials,
+					attributes: getMaterialsAttributeList("dropdown"),
+					through: {
+						attributes: [],
+					},
+				},
+			],
+		});
+		res.status(200).json({
+			status: true,
+			message: "Successfully retrieved all Department.",
+			data: department,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
