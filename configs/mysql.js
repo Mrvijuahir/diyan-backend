@@ -1,23 +1,34 @@
 const { Sequelize, Model } = require("sequelize");
 const _ = require("lodash");
 
-const sequelize = new Sequelize(
-  process.env.MYSQL_DB_NAME,
-  process.env.MYSQL_DB_USERNAME,
-  process.env.MYSQL_DB_PASSWORD,
-  {
-    host: process.env.MYSQL_DB_HOST,
-    port: process.env.MYSQL_DB_PORT,
-    dialect: "mysql",
-    pool: {
-      min: 0,
-      max: 5,
-      idle: 10000,
-      acquire: 60000,
-      evict: 1000,
-    },
-  }
-);
+// const sequelize = new Sequelize(
+//   process.env.MYSQL_DB_NAME,
+//   process.env.MYSQL_DB_USERNAME,
+//   process.env.MYSQL_DB_PASSWORD,
+//   {
+//     host: process.env.MYSQL_DB_HOST,
+//     port: process.env.MYSQL_DB_PORT,
+//     dialect: "mysql",
+//     pool: {
+//       min: 0,
+//       max: 5,
+//       idle: 10000,
+//       acquire: 60000,
+//       evict: 1000,
+//     },
+//   }
+// );
+
+const sequelize = new Sequelize(process.env.MYSQL_CONNECTION_URL, {
+  dialect: "mysql",
+  pool: {
+    min: 0,
+    max: 5,
+    idle: 10000,
+    acquire: 60000,
+    evict: 1000,
+  },
+});
 
 const getTableConfigs = (sequelize, tableName = "", excludeFields = []) => {
   return _.omit(

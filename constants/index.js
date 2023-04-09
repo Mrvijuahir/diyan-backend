@@ -8,18 +8,15 @@ module.exports = {
     OUTWARDING: "OutWarding",
   },
   MODULE_LIST: {
-    DASHBOARD: ["read", "create", "update"],
-    MANAGE_EMPLOYEE: {
-      ROLE: ["read", "create", "update"],
-      EMPLOYEE: ["read", "create", "update"],
-      HIERARCHY: ["read", "create", "update"],
+    dashboard: ["read", "create", "update"],
+    manage_employee: {
+      role: ["read", "create", "update"],
+      employee: ["read", "create", "update"],
+      hierarchy: ["read", "create", "update"],
     },
-    MANAGE_MATERIAL: ["read", "create", "update"],
-    MANAGE_DEPARTMENT: ["read", "create", "update"],
-    MANAGE_STOCKS: {
-      INWARDING: ["read", "create", "update"],
-      OUTWARDING: ["read", "create", "update"],
-    },
+    manage_material: ["read", "create", "update"],
+    manage_department: ["read", "create", "update"],
+    manage_stocks: ["read", "create", "update"],
   },
   getMSTAttributeList: (type) => {
     switch (type) {
