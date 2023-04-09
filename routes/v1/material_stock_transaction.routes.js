@@ -9,7 +9,6 @@ const {
 } = require("../../validations/material_stock_transaction");
 const { validate } = require("../../middlewares");
 
-// TODO test apis
 router.get("/last-transaction-detail", getLastTransactionDetail);
 router
   .route("/")

@@ -13,6 +13,7 @@ module.exports = {
     opening_stock: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .when("stock_transaction_type", {
         is: Joi.valid(STOCK_TRANSACTION_TYPES.INWARDING),
         then: Joi.required(),
@@ -21,6 +22,7 @@ module.exports = {
     receive_qty: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .when("stock_transaction_type", {
         is: Joi.valid(STOCK_TRANSACTION_TYPES.INWARDING),
         then: Joi.required(),
@@ -29,11 +31,13 @@ module.exports = {
     total_opening_stock: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .required()
       .label("Total opening stock"),
     today_consumption: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .when("stock_transaction_type", {
         is: Joi.valid(STOCK_TRANSACTION_TYPES.OUTWARDING),
         then: Joi.required(),
@@ -42,6 +46,7 @@ module.exports = {
     to_date_consumption: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .when("stock_transaction_type", {
         is: Joi.valid(STOCK_TRANSACTION_TYPES.OUTWARDING),
         then: Joi.required(),
@@ -50,6 +55,7 @@ module.exports = {
     closing_stock: Joi.number()
       .positive()
       .integer()
+      .allow(0)
       .when("stock_transaction_type", {
         is: Joi.valid(STOCK_TRANSACTION_TYPES.OUTWARDING),
         then: Joi.required(),

@@ -2,8 +2,14 @@ const { DataTypes } = require("sequelize");
 const { sequelize, Model, getTableConfigs } = require("../configs/mysql");
 const { STOCK_TRANSACTION_TYPES } = require("../constants");
 
-// TODO add relation with material table
-class MaterialStockTransactions extends Model {}
+class MaterialStockTransactions extends Model {
+  static associate(models) {
+    MaterialStockTransactions.belongsTo(models.Materials, {
+      foreignKey: "material_id",
+      targetKey: "id",
+    });
+  }
+}
 
 MaterialStockTransactions.init(
   {
@@ -97,11 +103,8 @@ MaterialStockTransactions.init(
                 material_id: transData?.material_id,
                 stock_transaction_type: STOCK_TRANSACTION_TYPES.OUTWARDING,
                 date: sequelize.where(
-                  sequelize.fn(
-                    "MONTH",
-                    sequelize.col("date"),
-                    new Date().getMonth() + 1
-                  )
+                  sequelize.fn("MONTH", sequelize.col("date")),
+                  new Date().getMonth() + 1
                 ),
               },
             }

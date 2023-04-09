@@ -4,7 +4,11 @@ const {
   STOCK_TRANSACTION_TYPES,
 } = require("../constants");
 const { queryGenerator } = require("../helpers");
-const { MaterialStockTransactions, Materials } = require("../models");
+const {
+  MaterialStockTransactions,
+  Materials,
+  sequelize,
+} = require("../models");
 const _ = require("lodash");
 const { Op } = require("sequelize");
 
@@ -65,7 +69,7 @@ exports.getAllTransaction = async (req, res, next) => {
 exports.getLastTransactionDetail = async (req, res, next) => {
   try {
     const { material_id, stock_transaction_type } = req.query;
-    const data = await MaterialStockTransactions.findOne({
+    let data = await MaterialStockTransactions.findOne({
       where: {
         material_id,
         stock_transaction_type:
@@ -73,6 +77,7 @@ exports.getLastTransactionDetail = async (req, res, next) => {
             ? STOCK_TRANSACTION_TYPES.OUTWARDING
             : STOCK_TRANSACTION_TYPES.INWARDING,
       },
+      order: [["id", "DESC"]],
     });
     if (!data)
       return res.status(422).json({
@@ -86,7 +91,9 @@ exports.getLastTransactionDetail = async (req, res, next) => {
         status: true,
         message:
           "Successfully retrieved information about last day transaction.",
-        data: _.pick(data, ["opening_stock"]),
+        data: {
+          opening_stock: data?.closing_stock,
+        },
       });
 
     const to_date_consumption = await MaterialStockTransactions.sum(
@@ -96,11 +103,8 @@ exports.getLastTransactionDetail = async (req, res, next) => {
           material_id: material_id,
           stock_transaction_type: STOCK_TRANSACTION_TYPES.OUTWARDING,
           date: sequelize.where(
-            sequelize.fn(
-              "MONTH",
-              sequelize.col("date"),
-              new Date().getMonth() + 1
-            )
+            sequelize.fn("MONTH", sequelize.col("date")),
+            new Date().getMonth() + 1
           ),
         },
       }
